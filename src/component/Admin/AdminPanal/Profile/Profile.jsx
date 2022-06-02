@@ -166,7 +166,7 @@ const Profile = () => {
     
     </Col>
     <Col span={6} pull={18}>
-    <img src={el.profile_picture} alt={el.first_name}/>
+    <img className="image_profile" src={el.profile_picture} alt={el.first_name}/>
     <div className='App_profile'>
         <input type="file" name="file" placeholder='Upload an image' onChange={(e) => uploadImage(e)}/>
         </div>

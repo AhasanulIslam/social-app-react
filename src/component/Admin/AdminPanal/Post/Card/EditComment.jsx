@@ -83,13 +83,13 @@ const EditComment = ({editInfo}) => {
     },
     {
       key: "3",
-      title: "Content",
+      title: "Comment",
       dataIndex: "content",
     },
     
     {
       key: "4",
-      title: "Actions",
+      // title: "Actions",
       render: (info) => {
         return (
           <>

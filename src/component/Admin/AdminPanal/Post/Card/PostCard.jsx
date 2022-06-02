@@ -2,8 +2,7 @@ import { Button, Card, Menu } from "antd";
 import React, { useState, useEffect, useRef } from "react";
 import { LikeOutlined, CommentOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { Modal } from 'antd';
-
+import { Modal } from "antd";
 
 import { Dropdown, message, Tooltip, Table } from "antd";
 import { AppstoreAddOutlined, UserOutlined } from "@ant-design/icons";
@@ -24,15 +23,15 @@ const PostCard = ({ postInfo }) => {
     content: "",
   });
 
-  const [comment, setCommnet] = useState(false)
+  const [comment, setCommnet] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  const [userData, setUserData] = useState({});
-  const [image, setImage] = useState(false)
+  const [userData, setUserData] = useState({});  
+  const [image, setImage] = useState(false);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("kdhfjf");
-  const userId = localStorage.userId
-
+  const [wrapComment, setwrapComment] = useState(false)
+  const userId = localStorage.userId;
 
   const refContainer = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -63,6 +62,7 @@ const PostCard = ({ postInfo }) => {
         console.log(err);
       });
   }, []);
+
   const handleChange = (event) => {
     setValues({
       ...values,
@@ -70,8 +70,8 @@ const PostCard = ({ postInfo }) => {
     });
   };
 
-  const edithandleChange = (event) => { 
-    event.preventDefault()
+  const edithandleChange = (event) => {
+    event.preventDefault();
     setEditValues({
       ...editValues,
       [event.target.name]: event.target.value,
@@ -102,6 +102,7 @@ const PostCard = ({ postInfo }) => {
   };
 
   const postComment = (postInfo, id, content) => {
+    setwrapComment(!wrapComment)
     const body = {
       post_id: id,
       content: values.content,
@@ -124,14 +125,18 @@ const PostCard = ({ postInfo }) => {
       post_id: id,
       content: editValues.content,
     };
-    console.log("editpost info",postInfo);
+    console.log("editpost info", postInfo);
     console.log("xczxcxc", editValues);
     axios
-      .patch(`https://soapp-nodejs.herokuapp.com/post/update-post/${postInfo.id}`, body, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user-info")}`,
-        },
-      })
+      .patch(
+        `https://soapp-nodejs.herokuapp.com/post/update-post/${postInfo.id}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user-info")}`,
+          },
+        }
+      )
       .then((res) => console.log(res.data))
       .catch((e) => console.log(e));
     console.log(postInfo);
@@ -144,101 +149,87 @@ const PostCard = ({ postInfo }) => {
       : setCls({ color: "green" });
   };
 
-
-  
-
   const showModal = () => {
-  setVisible(true);
-};
-
-
-const editPostModel = () =>{
-  
-<form className="from-wrapper">
-          <div className="email">
-            <div className="name">
-              <label className="label">Comment</label>
-              <input
-                className="input"
-                type="text"
-                name="content"
-                value={editValues.content}
-                onChange={edithandleChange}
-              />
-            </div>
-          </div>
-          <Button
-            type="primary"
-            shape="round"
-            icon={<EditOutlined />}
-            size="large"
-            onClick={() => Editpost(postInfo, postInfo.id, postInfo.content)}
-          >
-            Edit Comment
-          </Button>
-        </form>
-}
-
-const handleOk = () => {
-  setModalText(<form className="from-wrapper">
-            <div className="email">
-              <div className="name">
-                <label className="label">Update Commnet </label>
-                <input
-                  className="input"
-                  type="text"
-                  name="content"
-                  value={editValues.content}
-                  onChange={edithandleChange}
-                />
-              </div>
-            </div>
-            <Button
-              type="primary"
-              shape="round"
-              icon={<EditOutlined />}
-              size="large"
-              onClick={() => Editpost(postInfo, postInfo.id, postInfo.content)}
-            >
-              Edit Comment
-            </Button>
-          </form>);
-  setConfirmLoading(true);
-  setTimeout(() => {
-    setVisible(false);
-    setConfirmLoading(false);
-  }, 2000);
-};
-
-const handleCancel = () => {
-  console.log('Clicked cancel button');
-  setVisible(false);
-};
-
-
-const deletePost = (id) => {
-  const body = {
-    content: data.content,
+    setVisible(true);
   };
-  axios
-    .post(
-      `https://soapp-nodejs.herokuapp.com/post/delete-post/${id}`,
-      body,
-      {
+
+  const editPostModel = () => {
+    <form className="from-wrapper">
+      <div className="email">
+        <div className="name">
+          <label className="label">Comment</label>
+          <input
+            className="input"
+            type="text"
+            name="content"
+            value={editValues.content}
+            onChange={edithandleChange}
+          />
+        </div>
+      </div>
+      <Button
+        type="primary"
+        shape="round"
+        icon={<EditOutlined />}
+        size="large"
+        onClick={() => Editpost(postInfo, postInfo.id, postInfo.content)}
+      >
+        Edit Comment
+      </Button>
+    </form>;
+  };
+
+  const handleOk = () => {
+    setModalText(
+      <form className="from-wrapper">
+        <div className="email">
+          <div className="name">
+            <label className="label">Update Commnet </label>
+            <input
+              className="input"
+              type="text"
+              name="content"
+              value={editValues.content}
+              onChange={edithandleChange}
+            />
+          </div>
+        </div>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<EditOutlined />}
+          size="large"
+          onClick={() => Editpost(postInfo, postInfo.id, postInfo.content)}
+        >
+          Edit Comment
+        </Button>
+      </form>
+    );
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setVisible(false);
+      setConfirmLoading(false);
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setVisible(false);
+  };
+
+  const deletePost = (id) => {
+    const body = {
+      content: data.content,
+    };
+    axios
+      .post(`https://soapp-nodejs.herokuapp.com/post/delete-post/${id}`, body, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("user-info")}`,
         },
-      }
-    )
-    .then((res) => console.log("ggggg1", res.data))
-    .catch((e) => console.log(e));
-
-};
-
-
-
-
-
+      })
+      .then((res) => console.log("ggggg1", res.data))
+      .catch((e) => console.log(e));
+  };
 
   const Like_Count = (id) => {
     const body = {
@@ -255,83 +246,79 @@ const deletePost = (id) => {
       .catch((e) => console.log(e));
   };
 
-
   const menu = (
-   
     <Menu>
       <Menu.Item key="0">
-        
-
-      <Button type="primary" onClick={showModal}>
-        Update Comment
-      </Button>
-      <Modal
-        title="Title"
-        visible={visible}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      >
-        <p>{<form className="from-wrapper">
-          <div className="email">
-            <div className="name">
-              <label className="label">Comment</label>
-              <input
-                className="input"
-                type="text"
-                name="content"
-                value={editValues.content}
-                onChange={edithandleChange}
-              />
-            </div>
-          </div>
-          <Button
-            type="primary"
-            shape="round"
-            icon={<EditOutlined />}
-            size="large"
-            onClick={() => Editpost(postInfo, postInfo.id, postInfo.content)}
-          >
-            Edit Comment
-          </Button>
-        </form>}</p>
-      </Modal>
-
+        <Button type="primary" onClick={showModal}>
+          Update Comment
+        </Button>
+        <Modal
+          title="Title"
+          visible={visible}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+        >
+          <p>
+            {
+              <form className="from-wrapper">
+                <div className="email">
+                  <div className="name">
+                    <label className="label">Comment</label>
+                    <input
+                      className="input"
+                      type="text"
+                      name="content"
+                      value={editValues.content}
+                      onChange={edithandleChange}
+                    />
+                  </div>
+                </div>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<EditOutlined />}
+                  size="large"
+                  onClick={() =>
+                    Editpost(postInfo, postInfo.id, postInfo.content)
+                  }
+                >
+                  Edit Comment
+                </Button>
+              </form>
+            }
+          </p>
+        </Modal>
       </Menu.Item>
-      <Menu.Item key="1">{(userId == postInfo.user_id) && 
-              (
-               
-                  
-                <Tooltip placement="topLeft" title="Follow this user">
-                  <Button
-                    type="primary"
-                    shape="round"
-                    onClick={()=> deletePost(postInfo.id)}
-                  >
-                    Delete
-                  </Button>
-                </Tooltip>
-              )
-  
-              }</Menu.Item>
+      <Menu.Item key="1">
+        {userId == postInfo.user_id && (
+          <Tooltip placement="topLeft" title="Follow this user">
+            <Button
+              type="primary"
+              shape="round"
+              onClick={() => deletePost(postInfo.id)}
+            >
+              Delete
+            </Button>
+          </Tooltip>
+        )}
+      </Menu.Item>
       <Menu.Item key="1">Menu Item Three</Menu.Item>
     </Menu>
   );
 
   return (
     <Card
-      title={postInfo.first_name + " "+ postInfo.last_name}
+      title={postInfo.first_name + " " + postInfo.last_name}
       extra={
-        
-          <Dropdown.Button
-            overlay={menu}
-            placement="bottom"
-            icon={<AppstoreAddOutlined />}
-            className="ant-card-head"
-          >
-            More
-          </Dropdown.Button>
-        
+        <Dropdown.Button
+          overlay={menu}
+          placement="bottom"
+          icon={<AppstoreAddOutlined />}
+          className="ant-card-head"
+        >
+          More
+        </Dropdown.Button>
       }
       style={{
         display: "flex",
@@ -345,7 +332,13 @@ const deletePost = (id) => {
     >
       <div className="Data_Show" key={postInfo.id}>
         <h4 className=""> {postInfo.content}</h4>
-        <h4 className=""><img src={postInfo.picture} alt={postInfo.first_name}/></h4>
+        <h4>
+          <img
+            className="image_picture"
+            src={postInfo.picture}
+            alt={postInfo.first_name}
+          />
+        </h4>
 
         <div>
           <style>{`
@@ -368,65 +361,48 @@ const deletePost = (id) => {
             Like
           </Button>
 
-          <form className='from-wrapper'>
+         
 
-               <div className='email'>
-                    <div className='name'>
-                    <label className='label'>Comment</label>
-                    <input className='input' type="text" name='content' value={values.content} onChange={handleChange}/>
-                     </div>
-                </div>
-
-          <Button
-            type="primary"
-            shape="round"
-            icon={<CommentOutlined />}
-            size="large"
-            onClick={() => postComment(postInfo, postInfo.id, postInfo.content)}
-          >
-            Comment
-          </Button>
-
-          </form>
+            <Button
+              type="primary"
+              shape="round"
+              icon={<CommentOutlined />}
+              size="large"
+              onClick={() =>
+                postComment(postInfo, postInfo.id, postInfo.content)
+              }
+            >
+              Comment
+            </Button>
+         
         </div>
-      </div>
-      <div>
-       
-        {/* {dataSource.length > 0 ? 
+        {wrapComment && <>  <form className="from-wrapper">
+            <div className="email">
+              <div className="name">
+                <label className="label">Comment</label>
+                <input
+                  className="input"
+                  type="text"
+                  name="content"
+                  value={values.content}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            </form>
+            <div>
+            {/* {dataSource.length > 0 ? 
+                <EditComment editInfo={dataSource} />
+             : 
+              <h1>Data not found</h1>
+            } */}
             <EditComment editInfo={dataSource} />
-         : 
-          <h1>Data not found</h1>
-        } */}
-        <EditComment editInfo={dataSource} />
-
+          </div> </>}
+       
       </div>
+      
     </Card>
   );
 };
 
 export default PostCard;
-
-
-// <form className="from-wrapper">
-//           <div className="email">
-//             <div className="name">
-//               <label className="label">Comment</label>
-//               <input
-//                 className="input"
-//                 type="text"
-//                 name="content"
-//                 value={editValues.content}
-//                 onChange={edithandleChange}
-//               />
-//             </div>
-//           </div>
-//           <Button
-//             type="primary"
-//             shape="round"
-//             icon={<EditOutlined />}
-//             size="large"
-//             onClick={() => Editpost(postInfo, postInfo.id, postInfo.content)}
-//           >
-//             Edit Comment
-//           </Button>
-//         </form>

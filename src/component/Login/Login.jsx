@@ -11,11 +11,11 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    if (localStorage.getItem("user-info")) {
-      navigate("/home");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("user-info")) {
+  //     navigate("/home");
+  //   }
+  // }, []);
 
   function validateForm() {
     return email.length > 0 && password.length > 0;

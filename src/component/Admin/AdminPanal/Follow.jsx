@@ -4,6 +4,8 @@ import Navber from "../../Navber";
 import { Button, Table, Tooltip } from "antd";
 import "antd/dist/antd.css";
 import "../../../App.css";
+import PostCard from "../AdminPanal/Post/Card/PostCard";
+
 
 const Follow = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -103,6 +105,8 @@ const Follow = () => {
       <header className="App-header">
         <Table columns={columns} dataSource={dataSource}></Table>
       </header>
+
+      
     </div>
   );
 };

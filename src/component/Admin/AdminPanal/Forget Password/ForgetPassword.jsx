@@ -33,7 +33,7 @@ const ForgetPassword = () => {
           setErrors(Validation(values))
           setDataIsCorrect(true)
           console.log(values);
-          axios.post(`https://soapp-nodejs.herokuapp.com/users/forgot-password`,
+          axios.post(`https://soapp-nodejs.herokuapp.com/auth/forgot-password`,
        values)
           .then(res => console.log(res.data))
           .catch(e => console.log(e))
